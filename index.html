@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>CT4 - Conecta 4 Puntos Online (P2P, Temporizador 15s)</title>
-  <!-- Librería PeerJS para conexión Online P2P -->
+  <title>CT4 - Conecta 4 Puntos Online</title>
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
     :root {
@@ -13,7 +12,6 @@
       --card-border: rgba(255, 255, 255, 0.1);
       --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -22,7 +20,6 @@
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-
     body {
       background: var(--bg-gradient);
       color: #ffffff;
@@ -36,9 +33,7 @@
       padding: 12px;
       overflow: hidden;
     }
-
-    /* PANTALLA DE CONFIGURACIÓN */
-    #setup-modal {
+    #setup-modal, #results-modal {
       position: fixed;
       inset: 0;
       background: rgba(13, 18, 26, 0.95);
@@ -50,7 +45,6 @@
       justify-content: center;
       padding: 20px;
     }
-
     .setup-card {
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--card-border);
@@ -65,7 +59,6 @@
       max-height: 90vh;
       overflow-y: auto;
     }
-
     .setup-card h2 {
       font-size: 1.5rem;
       text-align: center;
@@ -73,7 +66,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .mode-selector {
       display: flex;
       gap: 8px;
@@ -81,7 +73,6 @@
       padding: 4px;
       border-radius: 10px;
     }
-
     .mode-btn {
       flex: 1;
       padding: 8px;
@@ -92,31 +83,25 @@
       font-size: 0.85rem;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s;
     }
-
     .mode-btn.active {
       background: #0052d4;
       color: #ffffff;
     }
-
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-
     .form-group label {
       font-size: 0.85rem;
       color: #a0aec0;
       font-weight: 600;
     }
-
     .form-row {
       display: flex;
       gap: 10px;
     }
-
     select, input[type="text"] {
       background: rgba(0, 0, 0, 0.3);
       color: #ffffff;
@@ -127,11 +112,15 @@
       outline: none;
       width: 100%;
     }
-
-    input[type="text"]:focus {
-      border-color: #00d2ff;
+    .color-picker-input {
+      width: 48px;
+      height: 40px;
+      padding: 2px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      cursor: pointer;
     }
-
     .checkbox-group {
       display: flex;
       align-items: center;
@@ -141,14 +130,11 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     .checkbox-group input {
       width: 18px;
       height: 18px;
       accent-color: #00d2ff;
-      cursor: pointer;
     }
-
     .btn-action {
       background: linear-gradient(135deg, #0052d4, #4364f7);
       color: #fff;
@@ -158,14 +144,7 @@
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(67, 100, 247, 0.4);
-      transition: transform 0.2s;
     }
-
-    .btn-action:active {
-      transform: scale(0.97);
-    }
-
     .online-panel {
       display: none;
       flex-direction: column;
@@ -175,7 +154,6 @@
       border-radius: 10px;
       border: 1px dashed var(--card-border);
     }
-
     .room-code-display {
       font-size: 1.4rem;
       font-weight: 800;
@@ -186,8 +164,39 @@
       padding: 8px;
       border-radius: 8px;
     }
-
-    /* JUEGO PRINCIPAL */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 15px 0;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 10px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.85rem;
+    }
+    .leaderboard-table th {
+      background: rgba(255, 255, 255, 0.05);
+      color: #a0aec0;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .player-cell-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-winner {
+      background: #fbbf24;
+      color: #000000;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      font-weight: 800;
+    }
     header {
       width: 100%;
       max-width: 480px;
@@ -196,14 +205,12 @@
       gap: 10px;
       align-items: center;
     }
-
     .title-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
     }
-
     h1 {
       font-size: 1.4rem;
       font-weight: 800;
@@ -212,7 +219,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .btn-menu {
       background: var(--card-bg);
       color: #e0e6ed;
@@ -223,14 +229,12 @@
       font-size: 0.8rem;
       cursor: pointer;
     }
-
     #scoreboard {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       gap: 8px;
       width: 100%;
     }
-
     .player-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -240,11 +244,10 @@
       flex-direction: column;
       align-items: center;
       gap: 2px;
-      transition: all 0.25s ease;
       opacity: 0.4;
       transform: scale(0.95);
+      transition: all 0.25s;
     }
-
     .player-card.active {
       opacity: 1;
       transform: scale(1);
@@ -252,7 +255,6 @@
       box-shadow: 0 0 15px var(--p-color-glow);
       border-color: var(--p-color);
     }
-
     .player-name {
       font-size: 0.75rem;
       font-weight: 700;
@@ -262,21 +264,16 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .player-score {
       font-size: 1.1rem;
       font-weight: 800;
       color: var(--p-color);
     }
-
     #powerup-bar {
       display: flex;
-      gap: 8px;
       justify-content: center;
-      align-items: center;
-      min-height: 36px;
+      min-height: 28px;
     }
-
     .btn-powerup {
       background: linear-gradient(135deg, #ff9900, #ff5500);
       color: white;
@@ -286,20 +283,69 @@
       font-size: 0.8rem;
       font-weight: bold;
       display: none;
-      animation: pulse 1.5s infinite alternate;
       cursor: pointer;
     }
-
     .btn-powerup.active-mode {
       background: linear-gradient(135deg, #ff0055, #990033);
       border: 2px solid #ffffff;
     }
-
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 153, 0, 0.5); }
-      100% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 153, 0, 0.9); }
+    #alerts-wrapper {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 6px 0;
+      min-height: 54px;
+      position: relative;
     }
-
+    #bonus-toast {
+      background: rgba(18, 24, 36, 0.92);
+      border: 1.5px solid var(--toast-color, #ffcc00);
+      border-radius: 12px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.95);
+      pointer-events: none;
+      transition: all 0.3s;
+      position: absolute;
+      width: 100%;
+      z-index: 60;
+    }
+    #bonus-toast.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .toast-icon { font-size: 1.4rem; }
+    .toast-text-group { display: flex; flex-direction: column; }
+    .toast-title { font-size: 0.8rem; font-weight: 900; color: var(--toast-color, #ffcc00); }
+    .toast-msg { font-size: 0.75rem; color: #e2e8f0; font-weight: 600; }
+    .status-toast {
+      font-size: 0.85rem;
+      color: #a0aec0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .status-toast span.player-label { color: #ffffff; font-weight: 700; }
+    .timer-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      padding: 3px 10px;
+      border-radius: 12px;
+      color: #ffcc00;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+    .timer-badge.warning { color: #ff3366; border-color: #ff3366; }
     #game-container {
       position: relative;
       width: 100%;
@@ -310,7 +356,6 @@
       justify-content: center;
       margin: auto 0;
     }
-
     canvas {
       width: 100%;
       height: 100%;
@@ -319,72 +364,28 @@
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
       touch-action: none;
     }
-
-    .status-toast {
-      font-size: 0.85rem;
-      color: #a0aec0;
-      text-align: center;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .status-toast span.player-label {
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    .timer-badge {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
-      padding: 3px 10px;
-      border-radius: 12px;
-      color: #ffcc00;
-      font-weight: 800;
-      font-size: 0.85rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.3s;
-    }
-
-    .timer-badge.warning {
-      color: #ff3366;
-      border-color: #ff3366;
-      animation: pulse-timer 0.5s infinite alternate;
-    }
-
-    @keyframes pulse-timer {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.08); }
-    }
   </style>
 </head>
 <body>
 
-  <!-- PANTALLA DE CONFIGURACIÓN PREVIA -->
   <div id="setup-modal">
     <div class="setup-card">
       <h2>CONFIGURAR PARTIDA</h2>
-
       <div class="mode-selector">
         <button class="mode-btn active" id="btn-mode-local"> Local</button>
         <button class="mode-btn" id="btn-mode-online"> Online P2P</button>
       </div>
       
-      <!-- Opciones Modo Local -->
       <div id="local-options" style="display: flex; flex-direction: column; gap: 12px;">
         <div class="form-row">
           <div class="form-group" style="flex: 1;">
             <label>Tablero</label>
             <select id="setup-grid">
-              <option value="4">4x4 (Rápido)</option>
-              <option value="6" selected>6x6 (Normal)</option>
-              <option value="8">8x8 (Largo)</option>
+              <option value="4">4x4</option>
+              <option value="6" selected>6x6</option>
+              <option value="8">8x8</option>
             </select>
           </div>
-
           <div class="form-group" style="flex: 1;">
             <label>Jugadores</label>
             <select id="setup-players-count">
@@ -394,23 +395,22 @@
             </select>
           </div>
         </div>
-
         <label class="checkbox-group">
           <input type="checkbox" id="setup-vs-ai">
           <span> Jugar contra la IA</span>
         </label>
-
         <div class="form-group" id="name-inputs-container"></div>
         <button id="btn-start-local" class="btn-action"> Empezar Local</button>
       </div>
 
-      <!-- Opciones Modo Online -->
       <div id="online-options" style="display: none; flex-direction: column; gap: 12px;">
         <div class="form-group">
-          <label>Tu Nombre</label>
-          <input type="text" id="online-player-name" value="Jugador 1" maxLength="12">
+          <label>Tu Nombre y Color</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="online-player-name" value="Jugador 1" maxLength="12">
+            <input type="color" id="online-player-color" class="color-picker-input" value="#00d2ff">
+          </div>
         </div>
-
         <div class="form-group">
           <label>Tamaño de Tablero</label>
           <select id="setup-grid-online">
@@ -419,70 +419,84 @@
             <option value="8">8x8</option>
           </select>
         </div>
-
-        <button id="btn-create-room" class="btn-action" style="background: linear-gradient(135deg, #00b09b, #96c93d);"> Crear Sala (Anfitrión)</button>
-
+        <button id="btn-create-room" class="btn-action" style="background: linear-gradient(135deg, #00b09b, #96c93d);"> Crear Sala</button>
         <div class="online-panel" id="host-panel">
-          <label style="font-size:0.8rem; color:#a0aec0;">Comparte este código con tu amigo:</label>
-          <div class="room-code-display" id="display-room-code">GENERANDO...</div>
-          <span style="font-size:0.75rem; color:#ffcc00; text-align:center;">Esperando conexión del rival...</span>
+          <label style="font-size:0.8rem; color:#a0aec0;">Código de sala:</label>
+          <div class="room-code-display" id="display-room-code">...</div>
         </div>
-
-        <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 4px 0;">
-
         <div class="form-group">
-          <label>Unirse a Sala Existente</label>
-          <input type="text" id="input-room-code" placeholder="Código de 5 letras..." style="text-transform: uppercase;">
+          <label>Unirse a Sala</label>
+          <input type="text" id="input-room-code" placeholder="Código..." style="text-transform: uppercase;">
         </div>
-        <button id="btn-join-room" class="btn-action"> Unirse a Sala</button>
+        <button id="btn-join-room" class="btn-action"> Unirse</button>
       </div>
-
     </div>
   </div>
 
-  <!-- CABECERA Y TABLERO -->
+  <div id="results-modal" style="display: none;">
+    <div class="setup-card" style="text-align: center;">
+      <h2 id="results-title"> POSICIONES</h2>
+      <p id="winner-announcement" style="color: #00f2fe; font-size: 1rem; font-weight: 700;"></p>
+      <table class="leaderboard-table">
+        <thead>
+          <tr><th>Pos</th><th>Jugador</th><th>Puntos</th></tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+      <div style="display: flex; gap: 10px;">
+        <button id="btn-play-again" class="btn-action" style="flex: 1;"> Jugar de nuevo</button>
+        <button id="btn-results-menu" class="btn-menu" style="flex: 1; padding: 12px;"> Menú</button>
+      </div>
+    </div>
+  </div>
+
   <header>
     <div class="title-bar">
       <h1>CT4 ONLINE</h1>
       <button id="btn-open-menu" class="btn-menu"> Menú</button>
     </div>
-
     <div id="scoreboard"></div>
-
     <div id="powerup-bar">
       <button id="btn-use-eraser" class="btn-powerup"> Usar Borrador</button>
     </div>
   </header>
 
+  <div id="alerts-wrapper">
+    <div id="bonus-toast">
+      <span id="toast-icon" class="toast-icon"></span>
+      <div class="toast-text-group">
+        <div id="toast-title" class="toast-title">AVISO</div>
+        <div id="toast-msg" class="toast-msg">Mensaje</div>
+      </div>
+    </div>
+    <div class="status-toast" id="status-toast">
+      Turno de: <span id="current-player-text" class="player-label">-</span>
+      <div id="timer-badge" class="timer-badge"> <span id="timer-text">15</span>s</div>
+    </div>
+  </div>
+
   <div id="game-container">
     <canvas id="gameCanvas"></canvas>
   </div>
 
-  <div class="status-toast" id="status-toast">
-    Turno de: <span id="current-player-text" class="player-label">-</span>
-    <div id="timer-badge" class="timer-badge"> <span id="timer-text">15</span>s</div>
-  </div>
-
   <script>
-    const PLAYER_PALETTE = [
-      { hex: "#ff2a5f", glow: "rgba(255, 42, 95, 0.4)" },
-      { hex: "#00d2ff", glow: "rgba(0, 210, 255, 0.4)" },
-      { hex: "#00f5a0", glow: "rgba(0, 245, 160, 0.4)" },
-      { hex: "#ffb703", glow: "rgba(255, 183, 3, 0.4)" }
-    ];
-
+    const DEFAULT_COLORS = ["#ff2a5f", "#00d2ff", "#00f5a0", "#ffb703"];
     const POWER_TYPES = {
       X2: { id: 'X2', label: ' X2', color: '#ffcc00' },
       ERASE: { id: 'ERASE', label: ' Borrador', color: '#ff3366' }
     };
-
     const TURN_TIME_LIMIT = 15;
+
+    function hexToGlow(hex) {
+      let c = hex.replace('#', '');
+      if (c.length === 3) c = c.split('').map(function(x) { return x + x; }).join('');
+      const num = parseInt(c, 16);
+      return 'rgba(' + ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255) + ', 0.5)';
+    }
 
     class SoundController {
       constructor() { this.ctx = null; }
-      init() {
-        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      }
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
       playTone(freq, type = 'sine', duration = 0.1) {
         if (!this.ctx) return;
         try {
@@ -518,7 +532,6 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // UI Elements
     const setupModal = document.getElementById('setup-modal');
     const nameInputsContainer = document.getElementById('name-inputs-container');
     const setupPlayersCount = document.getElementById('setup-players-count');
@@ -532,7 +545,18 @@
     const timerText = document.getElementById('timer-text');
     const timerBadge = document.getElementById('timer-badge');
 
-    // Online Mode UI Elements
+    const resultsModal = document.getElementById('results-modal');
+    const winnerAnnouncement = document.getElementById('winner-announcement');
+    const leaderboardBody = document.getElementById('leaderboard-body');
+    const btnPlayAgain = document.getElementById('btn-play-again');
+    const btnResultsMenu = document.getElementById('btn-results-menu');
+
+    const bonusToast = document.getElementById('bonus-toast');
+    const toastIcon = document.getElementById('toast-icon');
+    const toastTitle = document.getElementById('toast-title');
+    const toastMsg = document.getElementById('toast-msg');
+    let toastTimeout = null;
+
     const btnModeLocal = document.getElementById('btn-mode-local');
     const btnModeOnline = document.getElementById('btn-mode-online');
     const localOptions = document.getElementById('local-options');
@@ -543,36 +567,28 @@
     const displayRoomCode = document.getElementById('display-room-code');
     const inputRoomCode = document.getElementById('input-room-code');
     const onlinePlayerName = document.getElementById('online-player-name');
+    const onlinePlayerColor = document.getElementById('online-player-color');
     const setupGridOnline = document.getElementById('setup-grid-online');
 
-    // Estado del Juego
     let isOnlineMode = false;
-    let peer = null;
-    let conn = null;
-    let myPlayerIndex = 0; // Host = 0, Client = 1
-    let roomCode = null;
+    let peer = null, conn = null, myPlayerIndex = 0, roomCode = null;
+    let players = [], gridDimensions = 6, dotCount = 7, numPlayers = 2;
+    let currentPlayer = 0, scores = [], playerInventories = [];
+    let isEraserModeActive = false, isAiThinking = false, lastMove = null;
+    let turnTimer = null, timeLeft = TURN_TIME_LIMIT;
+    let hLines = [], vLines = [], boxes = [], powerGrid = [];
 
-    let players = [];
-    let gridDimensions = 6;
-    let dotCount = 7;
-    let numPlayers = 2;
-    let currentPlayer = 0;
-    let scores = [];
-    let playerInventories = [];
-    let isEraserModeActive = false;
-    let isAiThinking = false;
-    let lastMove = null;
+    function triggerBonusToast(icon, title, message, color = "#ffcc00") {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastIcon.textContent = icon;
+      toastTitle.textContent = title;
+      toastMsg.textContent = message;
+      bonusToast.style.setProperty('--toast-color', color);
+      bonusToast.style.setProperty('--toast-glow', hexToGlow(color));
+      bonusToast.classList.add('active');
+      toastTimeout = setTimeout(() => bonusToast.classList.remove('active'), 2500);
+    }
 
-    // Temporizador
-    let turnTimer = null;
-    let timeLeft = TURN_TIME_LIMIT;
-
-    let hLines = [];
-    let vLines = [];
-    let boxes = [];
-    let powerGrid = [];
-
-    // --- MODO SELECCIÓN INTERFAZ ---
     btnModeLocal.addEventListener('click', () => {
       isOnlineMode = false;
       btnModeLocal.classList.add('active');
@@ -589,16 +605,16 @@
       onlineOptions.style.display = 'flex';
     });
 
-    // --- TEMPORIZADOR ---
     function startTimer() {
       stopTimer();
       timeLeft = TURN_TIME_LIMIT;
       updateTimerUI();
-
       turnTimer = setInterval(() => {
         timeLeft--;
         updateTimerUI();
-
+        if (isOnlineMode && myPlayerIndex === 0 && conn && conn.open) {
+          conn.send({ type: 'SYNC_TIMER', timeLeft: timeLeft });
+        }
         if (timeLeft <= 0) {
           stopTimer();
           handleTimeoutAutoMove();
@@ -607,28 +623,19 @@
     }
 
     function stopTimer() {
-      if (turnTimer) {
-        clearInterval(turnTimer);
-        turnTimer = null;
-      }
+      if (turnTimer) { clearInterval(turnTimer); turnTimer = null; }
     }
 
     function updateTimerUI() {
       timerText.textContent = timeLeft;
-      if (timeLeft <= 5) {
-        timerBadge.classList.add('warning');
-      } else {
-        timerBadge.classList.remove('warning');
-      }
+      if (timeLeft <= 5) timerBadge.classList.add('warning');
+      else timerBadge.classList.remove('warning');
     }
 
     function handleTimeoutAutoMove() {
-      // Si estamos en online y no es nuestro turno local o del host, dejar que el anfitrión resuelva
       if (isOnlineMode && myPlayerIndex !== currentPlayer) return;
       if (players[currentPlayer].isAI) return;
-
       isEraserModeActive = false;
-
       let availableLines = [];
       for (let r = 0; r < dotCount; r++) {
         for (let c = 0; c < dotCount - 1; c++) {
@@ -640,29 +647,27 @@
           if (vLines[r][c] === -1) availableLines.push({ r, c, type: 'V' });
         }
       }
-
       if (availableLines.length > 0) {
         const randomMove = availableLines[Math.floor(Math.random() * availableLines.length)];
         executeMove(randomMove.r, randomMove.c, randomMove.type, true);
       }
     }
 
-    // --- FORMULARIO DE INICIO LOCAL ---
     function renderNameInputs() {
       const count = parseInt(setupPlayersCount.value);
       const vsAi = setupVsAi.checked;
       nameInputsContainer.innerHTML = '';
-
       for (let i = 0; i < count; i++) {
         const isAiPlayer = vsAi && i > 0;
-        const defaultName = isAiPlayer ? `IA Bot ${i}` : `Jugador ${i + 1}`;
-
+        const defaultName = isAiPlayer ? 'IA Bot ' + i : 'Jugador ' + (i + 1);
+        const defaultColor = DEFAULT_COLORS[i % DEFAULT_COLORS.length];
         const group = document.createElement('div');
         group.className = 'form-group';
-        group.innerHTML = `
-          <label style="color:${PLAYER_PALETTE[i].hex}">Nombre P${i + 1} ${isAiPlayer ? '(IA )' : ''}</label>
-          <input type="text" id="input-pname-${i}" value="${defaultName}" ${isAiPlayer ? 'disabled' : ''} maxLength="12">
-        `;
+        group.innerHTML = `<label>P${i + 1} Nombre y Color ${isAiPlayer ? '(IA )' : ''}</label>` +
+          `<div style="display: flex; gap: 8px;">` +
+            `<input type="text" id="input-pname-${i}" value="${defaultName}" ${isAiPlayer ? 'disabled' : ''} maxLength="12">` +
+            `<input type="color" id="input-pcolor-${i}" class="color-picker-input" value="${defaultColor}">` +
+          `</div>`;
         nameInputsContainer.appendChild(group);
       }
     }
@@ -674,219 +679,174 @@
       sound.click();
       isOnlineMode = false;
       setupModal.style.display = 'none';
+      resultsModal.style.display = 'none';
       initGameLocal();
     });
 
     btnOpenMenu.addEventListener('click', () => {
       sound.click();
       stopTimer();
-      if (peer) peer.destroy();
+      closePeerConnection();
+      resultsModal.style.display = 'none';
       setupModal.style.display = 'flex';
     });
 
-    // --- REDES Y MODO ONLINE (PeerJS) ---
     function generateRoomCode() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code = '';
-      for (let i = 0; i < 5; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
+      for (let i = 0; i < 5; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
       return code;
+    }
+
+    function closePeerConnection() {
+      if (conn) { try { conn.send({ type: 'DISCONNECT' }); } catch(e){} conn.close(); conn = null; }
+      if (peer) { peer.destroy(); peer = null; }
+    }
+
+    function handleOpponentDisconnect(reason = "El rival se ha desconectado.") {
+      stopTimer();
+      triggerBonusToast("", "DESCONECTADO", reason, "#ff3366");
+      currentPlayerText.textContent = "Rival Desconectado";
+      currentPlayerText.style.color = "#ff3366";
     }
 
     btnCreateRoom.addEventListener('click', () => {
       sound.click();
+      closePeerConnection();
       roomCode = generateRoomCode();
       displayRoomCode.textContent = roomCode;
       hostPanel.style.display = 'flex';
-
-      peer = new Peer(`ct4-room-${roomCode}`);
-
-      peer.on('open', () => {
-        console.log("Sala P2P creada:", roomCode);
-      });
+      peer = new Peer('ct4-room-' + roomCode);
 
       peer.on('connection', (connection) => {
         conn = connection;
-        myPlayerIndex = 0; // Host es Jugador 1
+        myPlayerIndex = 0;
         setupPeerListeners();
-
-        // Enviar evento de inicio al Cliente
         setTimeout(() => {
           gridDimensions = parseInt(setupGridOnline.value);
           const hostName = onlinePlayerName.value.trim() || 'Anfitrión';
-
-          conn.send({
-            type: 'INIT_GAME',
-            gridDimensions,
-            hostName
-          });
-
-          // Iniciar Juego Localmente para el Host
+          const hostColor = onlinePlayerColor.value;
+          conn.send({ type: 'INIT_GAME', gridDimensions, hostName, hostColor });
           setupModal.style.display = 'none';
-          initGameOnlineHost(hostName);
+          resultsModal.style.display = 'none';
+          initGameOnlineHost(hostName, hostColor);
         }, 500);
       });
-
-      peer.on('error', (err) => {
-        alert("Error al crear la sala online. Inténtalo de nuevo.");
-        console.error(err);
-      });
+      peer.on('error', () => triggerBonusToast("", "ERROR P2P", "No se pudo crear la sala.", "#ff3366"));
     });
 
     btnJoinRoom.addEventListener('click', () => {
       sound.click();
       const code = inputRoomCode.value.trim().toUpperCase();
       if (code.length < 5) {
-        alert("Por favor ingresa un código de sala válido.");
+        triggerBonusToast("", "CÓDIGO INVÁLIDO", "Ingresa un código de 5 letras.", "#ff3366");
         return;
       }
-
+      closePeerConnection();
       peer = new Peer();
-
       peer.on('open', () => {
-        conn = peer.connect(`ct4-room-${code}`);
-        myPlayerIndex = 1; // Unico cliente en 1v1
+        conn = peer.connect('ct4-room-' + code);
+        myPlayerIndex = 1;
         setupPeerListeners();
       });
-
-      peer.on('error', (err) => {
-        alert("No se pudo conectar a la sala. Verifica el código.");
-        console.error(err);
-      });
+      peer.on('error', () => triggerBonusToast("", "SIN CONEXIÓN", "Verifica el código.", "#ff3366"));
     });
 
     function setupPeerListeners() {
+      if (!conn) return;
+      conn.on('close', () => handleOpponentDisconnect("El rival abandonó la sala."));
+      conn.on('error', () => handleOpponentDisconnect("Error de conexión."));
       conn.on('data', (data) => {
+        if (data.type === 'DISCONNECT') handleOpponentDisconnect("El rival salió.");
         if (data.type === 'INIT_GAME') {
-          // Recibido por el cliente cuando el host arranca
           gridDimensions = data.gridDimensions;
           const clientName = onlinePlayerName.value.trim() || 'Invitado';
-
-          // Informar al host sobre el nombre del cliente
-          conn.send({ type: 'CLIENT_INFO', clientName });
-
+          const clientColor = onlinePlayerColor.value;
+          conn.send({ type: 'CLIENT_INFO', clientName, clientColor });
           setupModal.style.display = 'none';
-          initGameOnlineClient(data.hostName, clientName);
+          resultsModal.style.display = 'none';
+          initGameOnlineClient(data.hostName, data.hostColor, clientName, clientColor);
         }
-
         if (data.type === 'CLIENT_INFO' && myPlayerIndex === 0) {
-          // El Host asigna el nombre del Cliente
           players[1].name = data.clientName;
+          players[1].hex = data.clientColor;
+          players[1].glow = hexToGlow(data.clientColor);
           buildScoreboard();
           updateTurnUI();
           broadcastState();
         }
-
-        if (data.type === 'MOVE') {
-          executeMove(data.r, data.c, data.moveType, false);
-        }
-
-        if (data.type === 'ERASER_MOVE') {
-          applyEraserMove(data.r, data.c, data.moveType, data.owner);
-        }
-
+        if (data.type === 'MOVE') executeMove(data.r, data.c, data.moveType, false);
+        if (data.type === 'ERASER_MOVE') applyEraserMove(data.r, data.c, data.moveType, data.owner);
+        if (data.type === 'SYNC_TIMER') { timeLeft = data.timeLeft; updateTimerUI(); }
+        if (data.type === 'RESTART_GAME') { resultsModal.style.display = 'none'; startCommonGameLogic(); }
         if (data.type === 'SYNC_STATE') {
-          // Actualización de estado enviada por el Host
-          hLines = data.hLines;
-          vLines = data.vLines;
-          boxes = data.boxes;
-          scores = data.scores;
-          currentPlayer = data.currentPlayer;
-          lastMove = data.lastMove;
-          playerInventories = data.playerInventories;
-          
-          updateTurnUI();
-          render();
-          startTimer();
-          checkGameOver();
+          hLines = data.hLines; vLines = data.vLines; boxes = data.boxes;
+          scores = data.scores; currentPlayer = data.currentPlayer; lastMove = data.lastMove;
+          playerInventories = data.playerInventories; players = data.players;
+          buildScoreboard(); updateTurnUI(); render(); startTimer(); checkGameOver();
         }
       });
     }
 
     function broadcastState() {
-      if (isOnlineMode && conn) {
-        conn.send({
-          type: 'SYNC_STATE',
-          hLines,
-          vLines,
-          boxes,
-          scores,
-          currentPlayer,
-          lastMove,
-          playerInventories
-        });
+      if (isOnlineMode && conn && conn.open) {
+        conn.send({ type: 'SYNC_STATE', hLines, vLines, boxes, scores, currentPlayer, lastMove, playerInventories, players });
       }
     }
 
-    // --- INICIALIZACIONES DE JUEGO ---
+    window.addEventListener('beforeunload', closePeerConnection);
+
     function initGameLocal() {
       gridDimensions = parseInt(setupGrid.value);
       dotCount = gridDimensions + 1;
       numPlayers = parseInt(setupPlayersCount.value);
       const vsAi = setupVsAi.checked;
-
       players = [];
       for (let i = 0; i < numPlayers; i++) {
         const isAI = vsAi && i > 0;
-        const inputElem = document.getElementById(`input-pname-${i}`);
-        const nameVal = inputElem ? inputElem.value.trim() : `P${i + 1}`;
-        
+        const inputElem = document.getElementById('input-pname-' + i);
+        const colorElem = document.getElementById('input-pcolor-' + i);
         players.push({
-          name: nameVal || (isAI ? `IA Bot ${i}` : `P${i + 1}`),
-          hex: PLAYER_PALETTE[i].hex,
-          glow: PLAYER_PALETTE[i].glow,
-          isAI: isAI
+          name: inputElem ? inputElem.value.trim() || (isAI ? 'IA Bot ' + i : 'P' + (i + 1)) : 'P' + (i + 1),
+          hex: colorElem ? colorElem.value : DEFAULT_COLORS[i % DEFAULT_COLORS.length],
+          glow: hexToGlow(colorElem ? colorElem.value : DEFAULT_COLORS[i % DEFAULT_COLORS.length]),
+          isAI
         });
       }
-
       startCommonGameLogic();
     }
 
-    function initGameOnlineHost(hostName) {
-      dotCount = gridDimensions + 1;
-      numPlayers = 2;
-
+    function initGameOnlineHost(hostName, hostColor) {
+      dotCount = gridDimensions + 1; numPlayers = 2;
       players = [
-        { name: hostName, hex: PLAYER_PALETTE[0].hex, glow: PLAYER_PALETTE[0].glow, isAI: false },
-        { name: "Conectando...", hex: PLAYER_PALETTE[1].hex, glow: PLAYER_PALETTE[1].glow, isAI: false }
+        { name: hostName, hex: hostColor, glow: hexToGlow(hostColor), isAI: false },
+        { name: "Conectando...", hex: DEFAULT_COLORS[1], glow: hexToGlow(DEFAULT_COLORS[1]), isAI: false }
       ];
-
       startCommonGameLogic();
     }
 
-    function initGameOnlineClient(hostName, clientName) {
-      dotCount = gridDimensions + 1;
-      numPlayers = 2;
-
+    function initGameOnlineClient(hostName, hostColor, clientName, clientColor) {
+      dotCount = gridDimensions + 1; numPlayers = 2;
       players = [
-        { name: hostName, hex: PLAYER_PALETTE[0].hex, glow: PLAYER_PALETTE[0].glow, isAI: false },
-        { name: clientName, hex: PLAYER_PALETTE[1].hex, glow: PLAYER_PALETTE[1].glow, isAI: false }
+        { name: hostName, hex: hostColor, glow: hexToGlow(hostColor), isAI: false },
+        { name: clientName, hex: clientColor, glow: hexToGlow(clientColor), isAI: false }
       ];
-
       startCommonGameLogic();
     }
 
     function startCommonGameLogic() {
-      currentPlayer = 0;
-      isEraserModeActive = false;
-      isAiThinking = false;
-      lastMove = null;
-
+      currentPlayer = 0; isEraserModeActive = false; isAiThinking = false; lastMove = null;
       scores = new Array(numPlayers).fill(0);
       playerInventories = Array.from({ length: numPlayers }, () => ({ erasers: 0 }));
-
       hLines = Array.from({ length: dotCount }, () => new Array(dotCount - 1).fill(-1));
       vLines = Array.from({ length: dotCount - 1 }, () => new Array(dotCount).fill(-1));
       boxes = Array.from({ length: dotCount - 1 }, () => new Array(dotCount - 1).fill(-1));
       powerGrid = Array.from({ length: dotCount - 1 }, () => new Array(dotCount - 1).fill(null));
-
       spawnHiddenPowerUps();
       resizeCanvas();
       buildScoreboard();
       updateTurnUI();
       render();
-
       startTimer();
       checkAiTurn();
     }
@@ -894,12 +854,10 @@
     function spawnHiddenPowerUps() {
       const totalBoxes = (dotCount - 1) * (dotCount - 1);
       const count = Math.min(totalBoxes, Math.floor(Math.random() * 3) + 1);
-
       let placed = 0;
       while (placed < count) {
         const r = Math.floor(Math.random() * (dotCount - 1));
         const c = Math.floor(Math.random() * (dotCount - 1));
-
         if (!powerGrid[r][c]) {
           powerGrid[r][c] = Math.random() > 0.5 ? POWER_TYPES.X2 : POWER_TYPES.ERASE;
           placed++;
@@ -911,7 +869,6 @@
       const container = document.getElementById('game-container');
       const dpr = window.devicePixelRatio || 1;
       const rect = container.getBoundingClientRect();
-
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       ctx.scale(dpr, dpr);
@@ -922,43 +879,40 @@
       scoreboard.innerHTML = '';
       for (let i = 0; i < numPlayers; i++) {
         const card = document.createElement('div');
-        card.className = `player-card`;
-        card.id = `player-card-${i}`;
+        card.className = 'player-card';
+        card.id = 'player-card-' + i;
         card.style.setProperty('--p-color', players[i].hex);
         card.style.setProperty('--p-color-glow', players[i].glow);
-        card.innerHTML = `
-          <span class="player-name">${players[i].name}</span>
-          <span class="player-score" id="score-${i}">0</span>
-        `;
+        card.innerHTML = `<span class="player-name">${players[i].name}</span><span class="player-score" id="score-${i}">0</span>`;
         scoreboard.appendChild(card);
       }
     }
 
     function updateTurnUI() {
       for (let i = 0; i < numPlayers; i++) {
-        const card = document.getElementById(`player-card-${i}`);
-        const scoreElem = document.getElementById(`score-${i}`);
+        const card = document.getElementById('player-card-' + i);
+        const scoreElem = document.getElementById('score-' + i);
         if (scoreElem) scoreElem.textContent = scores[i];
         if (card) {
+          card.style.setProperty('--p-color', players[i].hex);
+          card.style.setProperty('--p-color-glow', players[i].glow);
           if (i === currentPlayer) card.classList.add('active');
           else card.classList.remove('active');
         }
       }
-
       const activeP = players[currentPlayer];
       let onlineInfo = isOnlineMode ? (myPlayerIndex === currentPlayer ? ' (Tú)' : ' (Rival)') : '';
-      currentPlayerText.textContent = `${activeP.name}${onlineInfo} ${activeP.isAI ? '(Pensando... )' : ''}`;
+      currentPlayerText.textContent = activeP.name + onlineInfo + (activeP.isAI ? ' (Pensando... )' : '');
       currentPlayerText.style.color = activeP.hex;
 
       const currentErasers = playerInventories[currentPlayer].erasers;
       const isMyTurn = !isOnlineMode || (myPlayerIndex === currentPlayer);
-
       if (currentErasers > 0 && !activeP.isAI && isMyTurn) {
         btnUseEraser.style.display = 'inline-block';
-        btnUseEraser.textContent = ` Usar Borrador (${currentErasers})`;
+        btnUseEraser.textContent = ' Usar Borrador (' + currentErasers + ')';
         if (isEraserModeActive) {
           btnUseEraser.classList.add('active-mode');
-          btnUseEraser.textContent = ` Cancelar Borrador`;
+          btnUseEraser.textContent = ' Cancelar Borrador';
         } else {
           btnUseEraser.classList.remove('active-mode');
         }
@@ -968,7 +922,6 @@
       }
     }
 
-    // --- RENDERIZADO EN CANVAS ---
     function render() {
       const width = canvas.width / (window.devicePixelRatio || 1);
       const height = canvas.height / (window.devicePixelRatio || 1);
@@ -978,19 +931,16 @@
 
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Cuadros
       for (let r = 0; r < dotCount - 1; r++) {
         for (let c = 0; c < dotCount - 1; c++) {
           const x = margin + c * spacing;
           const y = margin + r * spacing;
           const owner = boxes[r][c];
-
           if (owner !== -1) {
             ctx.fillStyle = players[owner].hex + "33";
             ctx.fillRect(x, y, spacing, spacing);
-
             ctx.fillStyle = players[owner].hex;
-            ctx.font = `800 ${spacing * 0.35}px var(--font-family)`;
+            ctx.font = '800 ' + (spacing * 0.35) + 'px var(--font-family)';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(players[owner].name, x + spacing / 2, y + spacing / 2);
@@ -998,18 +948,6 @@
         }
       }
 
-      // 2. Guías
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
-      for (let i = 0; i < dotCount; i++) {
-        const pos = margin + i * spacing;
-        ctx.beginPath();
-        ctx.moveTo(margin, pos); ctx.lineTo(width - margin, pos);
-        ctx.moveTo(pos, margin); ctx.lineTo(pos, height - margin);
-        ctx.stroke();
-      }
-
-      // 3. Líneas Horizontales
       for (let r = 0; r < dotCount; r++) {
         for (let c = 0; c < dotCount - 1; c++) {
           const owner = hLines[r][c];
@@ -1022,7 +960,6 @@
         }
       }
 
-      // 4. Líneas Verticales
       for (let r = 0; r < dotCount - 1; r++) {
         for (let c = 0; c < dotCount; c++) {
           const owner = vLines[r][c];
@@ -1035,15 +972,11 @@
         }
       }
 
-      // 5. Puntos
       for (let r = 0; r < dotCount; r++) {
         for (let c = 0; c < dotCount; c++) {
-          const x = margin + c * spacing;
-          const y = margin + r * spacing;
-
           ctx.fillStyle = "#ffffff";
           ctx.beginPath();
-          ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+          ctx.arc(margin + c * spacing, margin + r * spacing, dotRadius, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -1052,61 +985,41 @@
     function drawStyledLine(x1, y1, x2, y2, color, width, isLastMove = false) {
       ctx.save();
       ctx.lineCap = 'round';
-
       if (isLastMove) {
         ctx.strokeStyle = color;
         ctx.lineWidth = width * 1.5;
         ctx.shadowColor = '#ffffff';
         ctx.shadowBlur = 18;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = width * 0.7;
         ctx.shadowBlur = 0;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
       } else {
         ctx.strokeStyle = color;
         ctx.lineWidth = width;
         ctx.shadowColor = color;
         ctx.shadowBlur = 8;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
       }
-
       ctx.restore();
     }
 
     function invalidateAdjacentBoxes(r, c, type) {
       const resetBox = (br, bc) => {
         if (br >= 0 && br < dotCount - 1 && bc >= 0 && bc < dotCount - 1) {
-          const previousOwner = boxes[br][bc];
-          if (previousOwner !== -1) {
+          if (boxes[br][bc] !== -1) {
+            scores[boxes[br][bc]] = Math.max(0, scores[boxes[br][bc]] - 1);
             boxes[br][bc] = -1;
-            scores[previousOwner] = Math.max(0, scores[previousOwner] - 1);
           }
         }
       };
-
-      if (type === 'H') {
-        resetBox(r - 1, c);
-        resetBox(r, c);
-      } else {
-        resetBox(r, c - 1);
-        resetBox(r, c);
-      }
+      if (type === 'H') { resetBox(r - 1, c); resetBox(r, c); }
+      else { resetBox(r, c - 1); resetBox(r, c); }
     }
 
-    // --- ENTRADA DE JUGADOR HUMANO ---
     function handleInput(clientX, clientY) {
-      if (isOnlineMode && myPlayerIndex !== currentPlayer) return; // Bloquear si no es tu turno online
+      if (isOnlineMode && myPlayerIndex !== currentPlayer) return;
       if (players[currentPlayer].isAI || isAiThinking) return;
 
       sound.init();
@@ -1119,22 +1032,14 @@
       const margin = width * 0.1;
       const spacing = (width - margin * 2) / (dotCount - 1);
 
-      let closestLine = null;
-      let minDistance = spacing * 0.45;
+      let closestLine = null, minDistance = spacing * 0.45;
 
       for (let r = 0; r < dotCount; r++) {
         for (let c = 0; c < dotCount - 1; c++) {
           const isPlaced = hLines[r][c] !== -1;
           if ((!isEraserModeActive && isPlaced) || (isEraserModeActive && !isPlaced)) continue;
-
-          const midX = margin + c * spacing + spacing / 2;
-          const midY = margin + r * spacing;
-          const dist = Math.hypot(x - midX, y - midY);
-
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestLine = { type: 'H', r, c, owner: hLines[r][c] };
-          }
+          const dist = Math.hypot(x - (margin + c * spacing + spacing / 2), y - (margin + r * spacing));
+          if (dist < minDistance) { minDistance = dist; closestLine = { type: 'H', r, c, owner: hLines[r][c] }; }
         }
       }
 
@@ -1142,15 +1047,8 @@
         for (let c = 0; c < dotCount; c++) {
           const isPlaced = vLines[r][c] !== -1;
           if ((!isEraserModeActive && isPlaced) || (isEraserModeActive && !isPlaced)) continue;
-
-          const midX = margin + c * spacing;
-          const midY = margin + r * spacing + spacing / 2;
-          const dist = Math.hypot(x - midX, y - midY);
-
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestLine = { type: 'V', r, c, owner: vLines[r][c] };
-          }
+          const dist = Math.hypot(x - (margin + c * spacing), y - (margin + r * spacing + spacing / 2));
+          if (dist < minDistance) { minDistance = dist; closestLine = { type: 'V', r, c, owner: vLines[r][c] }; }
         }
       }
 
@@ -1158,84 +1056,44 @@
         if (isEraserModeActive) {
           if (closestLine.owner !== -1 && closestLine.owner !== currentPlayer) {
             applyEraserMove(closestLine.r, closestLine.c, closestLine.type, closestLine.owner);
-
-            if (isOnlineMode && conn) {
-              conn.send({
-                type: 'ERASER_MOVE',
-                r: closestLine.r,
-                c: closestLine.c,
-                moveType: closestLine.type,
-                owner: closestLine.owner
-              });
+            if (isOnlineMode && conn && conn.open) {
+              conn.send({ type: 'ERASER_MOVE', r: closestLine.r, c: closestLine.c, moveType: closestLine.type, owner: closestLine.owner });
             }
           }
           return;
         }
-
-        if (isOnlineMode && conn) {
-          conn.send({
-            type: 'MOVE',
-            r: closestLine.r,
-            c: closestLine.c,
-            moveType: closestLine.type
-          });
+        if (isOnlineMode && conn && conn.open) {
+          conn.send({ type: 'MOVE', r: closestLine.r, c: closestLine.c, moveType: closestLine.type });
         }
-
         executeMove(closestLine.r, closestLine.c, closestLine.type, true);
       }
     }
 
     function applyEraserMove(r, c, type, owner) {
-      if (type === 'H') hLines[r][c] = -1;
-      else vLines[r][c] = -1;
-
-      if (lastMove && lastMove.type === type && lastMove.r === r && lastMove.c === c) {
-        lastMove = null;
-      }
-
+      if (type === 'H') hLines[r][c] = -1; else vLines[r][c] = -1;
+      if (lastMove && lastMove.type === type && lastMove.r === r && lastMove.c === c) lastMove = null;
       invalidateAdjacentBoxes(r, c, type);
       playerInventories[currentPlayer].erasers--;
       isEraserModeActive = false;
       sound.powerup();
-      updateTurnUI();
-      render();
-      startTimer();
-
-      if (isOnlineMode && myPlayerIndex === 0) {
-        broadcastState();
-      }
+      triggerBonusToast("", "LÍNEA BORRADA", players[currentPlayer].name + " eliminó una línea enemiga.", "#ff3366");
+      updateTurnUI(); render(); startTimer();
+      if (isOnlineMode && myPlayerIndex === 0) broadcastState();
     }
 
     function executeMove(r, c, type, isLocalTrigger = true) {
-      if (type === 'H') hLines[r][c] = currentPlayer;
-      else vLines[r][c] = currentPlayer;
-
+      if (type === 'H') hLines[r][c] = currentPlayer; else vLines[r][c] = currentPlayer;
       lastMove = { r, c, type };
-
       sound.click();
-
       const result = checkBoxes(r, c, type);
-
       if (!result.scored && !result.extraTurnGranted) {
         currentPlayer = (currentPlayer + 1) % numPlayers;
       }
-
-      updateTurnUI();
-      render();
-
-      if (isOnlineMode && myPlayerIndex === 0) {
-        broadcastState();
-      }
-      
-      if (!checkGameOver()) {
-        startTimer();
-        checkAiTurn();
-      } else {
-        stopTimer();
-      }
+      updateTurnUI(); render();
+      if (isOnlineMode && myPlayerIndex === 0) broadcastState();
+      if (!checkGameOver()) { startTimer(); checkAiTurn(); } else { stopTimer(); }
     }
 
-    // --- LÓGICA DE LA IA ---
     function checkAiTurn() {
       if (players[currentPlayer].isAI && !isAiThinking) {
         isAiThinking = true;
@@ -1253,11 +1111,7 @@
     }
 
     function makeAiMove() {
-      if (!players[currentPlayer].isAI) {
-        isAiThinking = false;
-        return;
-      }
-
+      if (!players[currentPlayer].isAI) { isAiThinking = false; return; }
       if (playerInventories[currentPlayer].erasers > 0) {
         let enemyBoxLine = null;
         for (let r = 0; r < dotCount - 1 && !enemyBoxLine; r++) {
@@ -1268,49 +1122,29 @@
             }
           }
         }
-
         if (enemyBoxLine) {
           applyEraserMove(enemyBoxLine.r, enemyBoxLine.c, enemyBoxLine.type, -1);
-          isAiThinking = false;
-          checkAiTurn();
-          return;
+          isAiThinking = false; checkAiTurn(); return;
         }
       }
 
       let availableLines = [];
       for (let r = 0; r < dotCount; r++) {
-        for (let c = 0; c < dotCount - 1; c++) {
-          if (hLines[r][c] === -1) availableLines.push({ r, c, type: 'H' });
-        }
+        for (let c = 0; c < dotCount - 1; c++) { if (hLines[r][c] === -1) availableLines.push({ r, c, type: 'H' }); }
       }
       for (let r = 0; r < dotCount - 1; r++) {
-        for (let c = 0; c < dotCount; c++) {
-          if (vLines[r][c] === -1) availableLines.push({ r, c, type: 'V' });
-        }
+        for (let c = 0; c < dotCount; c++) { if (vLines[r][c] === -1) availableLines.push({ r, c, type: 'V' }); }
       }
-
-      if (availableLines.length === 0) {
-        isAiThinking = false;
-        return;
-      }
+      if (availableLines.length === 0) { isAiThinking = false; return; }
 
       for (let move of availableLines) {
         if (willCompleteBox(move.r, move.c, move.type)) {
-          isAiThinking = false;
-          executeMove(move.r, move.c, move.type, true);
-          return;
+          isAiThinking = false; executeMove(move.r, move.c, move.type, true); return;
         }
       }
 
-      let safeLines = availableLines.filter(move => !willCreateThirdSide(move.r, move.c, move.type));
-
-      let chosenMove;
-      if (safeLines.length > 0) {
-        chosenMove = safeLines[Math.floor(Math.random() * safeLines.length)];
-      } else {
-        chosenMove = availableLines[Math.floor(Math.random() * availableLines.length)];
-      }
-
+      let safeLines = availableLines.filter(m => !willCreateThirdSide(m.r, m.c, m.type));
+      let chosenMove = safeLines.length > 0 ? safeLines[Math.floor(Math.random() * safeLines.length)] : availableLines[Math.floor(Math.random() * availableLines.length)];
       isAiThinking = false;
       executeMove(chosenMove.r, chosenMove.c, chosenMove.type, true);
     }
@@ -1337,19 +1171,11 @@
       return false;
     }
 
-    // --- REGLAS DE RECONOCIMIENTO DE PUNTOS ---
     function checkBoxes(r, c, type) {
-      let scored = false;
-      let extraTurnGranted = false;
-
+      let scored = false, extraTurnGranted = false;
       const isBoxComplete = (row, col) => {
         if (row < 0 || row >= dotCount - 1 || col < 0 || col >= dotCount - 1) return false;
-        return (
-          hLines[row][col] !== -1 &&
-          hLines[row + 1][col] !== -1 &&
-          vLines[row][col] !== -1 &&
-          vLines[row][col + 1] !== -1
-        );
+        return hLines[row][col] !== -1 && hLines[row + 1][col] !== -1 && vLines[row][col] !== -1 && vLines[row][col + 1] !== -1;
       };
 
       const claimBox = (row, col) => {
@@ -1357,19 +1183,102 @@
           if (boxes[row][col] === -1 && isBoxComplete(row, col)) {
             boxes[row][col] = currentPlayer;
             scored = true;
-
             let pointsAwarded = 1;
             const power = powerGrid[row][col];
-
             if (power) {
               sound.powerup();
               if (power.id === 'X2') {
-                pointsAwarded = 2;
-                extraTurnGranted = true;
-                alert(` ¡MISTERIO REVELADO! ${players[currentPlayer].name} descubrió un BONUS X2 (+2 Pts y Turno Extra).`);
+                pointsAwarded = 2; extraTurnGranted = true;
+                triggerBonusToast("", "MULTIPLICADOR", players[currentPlayer].name + " obtuvo +2 Puntos!", "#ffcc00");
               } else if (power.id === 'ERASE') {
                 playerInventories[currentPlayer].erasers++;
-                alert(` ¡MISTERIO REVELADO! ${players[currentPlayer].name} descubrió un BORRADOR DE LÍNEAS.`);
+                triggerBonusToast("", "BORRADOR", players[currentPlayer].name + " obtuvo un Borrador!", "#ff3366");
+              }
+              powerGrid[row][col] = null;
+            } else { sound.score(); }
+            scores[currentPlayer] += pointsAwarded;
+          }
+        }
+      };
+
+      if (type === 'H') { claimBox(r - 1, c); claimBox(r, c); }
+      else { claimBox(r, c - 1); claimBox(r, c); }
+      return { scored, extraTurnGranted };
+    }
+
+    function checkGameOver() {
+      const totalBoxes = (dotCount - 1) * (dotCount - 1);
+      const claimedBoxes = boxes.flat().filter(owner => owner !== -1).length;
+      if (claimedBoxes >= totalBoxes) {
+        sound.win(); stopTimer();
+        setTimeout(showLeaderboard, 800);
+        return true;
+      }
+      return false;
+    }
+
+    function showLeaderboard() {
+      const rankedPlayers = players.map((player, index) => ({
+        name: player.name, score: scores[index], hex: player.hex
+      })).sort((a, b) => b.score - a.score);
+
+      const maxScore = rankedPlayers[0].score;
+      const winners = rankedPlayers.filter(p => p.score === maxScore);
+
+      if (winners.length === 1) {
+        winnerAnnouncement.textContent = '¡' + winners[0].name + ' gana con ' + maxScore + ' pts!';
+        winnerAnnouncement.style.color = "#00f5a0";
+      } else {
+        winnerAnnouncement.textContent = '¡Empate con ' + maxScore + ' pts!';
+        winnerAnnouncement.style.color = "#00d2ff";
+      }
+
+      leaderboardBody.innerHTML = '';
+      rankedPlayers.forEach((player, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td class="pos-col">${index + 1}º</td>` +
+          `<td><div class="player-cell-container"><span style="color:${player.hex}; font-weight:700;">${player.name}</span>${index === 0 ? '<span class="badge-winner">Ganador</span>' : ''}</div></td>` +
+          `<td style="font-weight:800;">${player.score} pts</td>`;
+        leaderboardBody.appendChild(row);
+      });
+      resultsModal.style.display = 'flex';
+    }
+
+    btnPlayAgain.addEventListener('click', () => {
+      sound.click();
+      resultsModal.style.display = 'none';
+      if (isOnlineMode && conn && conn.open) conn.send({ type: 'RESTART_GAME' });
+      startCommonGameLogic();
+    });
+
+    btnResultsMenu.addEventListener('click', () => {
+      sound.click();
+      resultsModal.style.display = 'none';
+      closePeerConnection();
+      setupModal.style.display = 'flex';
+    });
+
+    canvas.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      handleInput(e.clientX, e.clientY);
+    });
+
+    btnUseEraser.addEventListener('click', () => {
+      if (isOnlineMode && myPlayerIndex !== currentPlayer) return;
+      isEraserModeActive = !isEraserModeActive;
+      updateTurnUI();
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    renderNameInputs();
+  </script>
+</body>
+</html>
+
+                  "BORRADOR OBTENIDO", 
+                  `${players[currentPlayer].name} desbloque&oacute; un Borrador de L&iacute;neas!`, 
+                  "#ff3366"
+                );
               }
               powerGrid[row][col] = null;
             } else {
@@ -1392,6 +1301,7 @@
       return { scored, extraTurnGranted };
     }
 
+    // --- FIN DE PARTIDA Y MOSTRAR TABLA DE POSICIONES ---
     function checkGameOver() {
       const totalBoxes = (dotCount - 1) * (dotCount - 1);
       const claimedBoxes = boxes.flat().filter(owner => owner !== -1).length;
@@ -1400,21 +1310,101 @@
         sound.win();
         stopTimer();
         setTimeout(() => {
-          const maxScore = Math.max(...scores);
-          const winners = players.filter((_, idx) => scores[idx] === maxScore).map(p => p.name);
-
-          if (winners.length === 1) {
-            alert(`¡Victoria para ${winners[0]} con ${maxScore} puntos!`);
-          } else {
-            alert(`¡Empate entre ${winners.join(' y ')} con ${maxScore} puntos!`);
-          }
-        }, 200);
+          showLeaderboard();
+        }, 800);
         return true;
       }
       return false;
     }
 
-    // --- EVENTOS ---
+    function showLeaderboard() {
+      // Crear copia y ordenar los jugadores según sus puntos en orden descendente
+      const rankedPlayers = players
+        .map((player, index) => ({
+          name: player.name,
+          score: scores[index],
+          hex: player.hex
+        }))
+        .sort((a, b) => b.score - a.score);
+
+      const maxScore = rankedPlayers[0].score;
+      const winners = rankedPlayers.filter(p => p.score === maxScore);
+
+      if (winners.length === 1) {
+        winnerAnnouncement.innerHTML = `&iexcl;${winners[0].name} gana la partida con ${maxScore} pts!`;
+        winnerAnnouncement.style.color = "#00f5a0";
+      } else {
+        winnerAnnouncement.innerHTML = `&iexcl;Empate entre ${winners.map(w => w.name).join(' y ')} con ${maxScore} pts!`;
+        winnerAnnouncement.style.color = "#00d2ff";
+      }
+
+      // Renderizar filas de la tabla
+      leaderboardBody.innerHTML = '';
+      rankedPlayers.forEach((player, index) => {
+        const row = document.createElement('tr');
+        
+        const posTd = document.createElement('td');
+        posTd.className = 'pos-col';
+        posTd.innerHTML = `${index + 1}<sup>o</sup>`;
+
+        const nameTd = document.createElement('td');
+        
+        const container = document.createElement('div');
+        container.className = 'player-cell-container';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.style.color = player.hex;
+        nameSpan.style.fontWeight = "700";
+        nameSpan.textContent = player.name;
+        container.appendChild(nameSpan);
+
+        if (index === 0) {
+          const badge = document.createElement('span');
+          badge.className = 'badge-winner';
+          badge.innerHTML = '1<sup>o</sup> Lugar';
+          container.appendChild(badge);
+        }
+
+        nameTd.appendChild(container);
+
+        const scoreTd = document.createElement('td');
+        scoreTd.style.fontWeight = "800";
+        scoreTd.textContent = `${player.score} pts`;
+
+        row.appendChild(posTd);
+        row.appendChild(nameTd);
+        row.appendChild(scoreTd);
+
+        leaderboardBody.appendChild(row);
+      });
+
+      resultsModal.style.display = 'flex';
+    }
+
+    function resetAndPlayAgain() {
+      sound.click();
+      resultsModal.style.display = 'none';
+
+      if (isOnlineMode) {
+        if (conn && conn.open) {
+          conn.send({ type: 'RESTART_GAME' });
+        }
+      }
+
+      startCommonGameLogic();
+    }
+
+    // Eventos de los botones de la pantalla de resultados
+    btnPlayAgain.addEventListener('click', resetAndPlayAgain);
+
+    btnResultsMenu.addEventListener('click', () => {
+      sound.click();
+      resultsModal.style.display = 'none';
+      closePeerConnection();
+      setupModal.style.display = 'flex';
+    });
+
+    // --- EVENTOS DE INTERACCIÓN ---
     canvas.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       handleInput(e.clientX, e.clientY);
