@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>CT4 - Conecta 4 Puntos Online (Personalizable)</title>
-  <!-- Librer�a PeerJS para conexi�n Online P2P -->
+  <!-- Librería PeerJS para conexión Online P2P -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
     :root {
@@ -37,7 +37,7 @@
       overflow: hidden;
     }
 
-    /* PANTALLAS MODALES DE CONFIGURACI�N Y RESULTADOS */
+    /* PANTALLAS MODALES DE CONFIGURACIÓN Y RESULTADOS */
     #setup-modal, #results-modal {
       position: fixed;
       inset: 0;
@@ -70,6 +70,7 @@
       font-size: 1.5rem;
       text-align: center;
       background: linear-gradient(90deg, #00f2fe, #4facfe);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -197,7 +198,7 @@
       border-radius: 8px;
     }
 
-    /* ESTILOS DE LA TABLA DE CLASIFICACI�N / RESULTADOS CORREGIDOS */
+    /* ESTILOS DE LA TABLA DE CLASIFICACIÓN / RESULTADOS CORREGIDOS */
     .leaderboard-table {
       width: 100%;
       border-collapse: collapse;
@@ -275,6 +276,7 @@
       font-weight: 800;
       letter-spacing: 2px;
       background: linear-gradient(90deg, #00f2fe, #4facfe);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -496,14 +498,14 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CONFIGURACI�N PREVIA -->
+  <!-- PANTALLA DE CONFIGURACIÓN PREVIA -->
   <div id="setup-modal">
     <div class="setup-card">
       <h2>CONFIGURAR PARTIDA</h2>
 
       <div class="mode-selector">
-        <button class="mode-btn active" id="btn-mode-local"> Local</button>
-        <button class="mode-btn" id="btn-mode-online"> Online P2P</button>
+        <button class="mode-btn active" id="btn-mode-local">📱 Local</button>
+        <button class="mode-btn" id="btn-mode-online">🌐 Online P2P</button>
       </div>
       
       <!-- Opciones Modo Local -->
@@ -530,11 +532,11 @@
 
         <label class="checkbox-group">
           <input type="checkbox" id="setup-vs-ai">
-          <span> Jugar contra la IA</span>
+          <span>🎮 Jugar contra la IA</span>
         </label>
 
         <div class="form-group" id="name-inputs-container"></div>
-        <button id="btn-start-local" class="btn-action"> Empezar Local</button>
+        <button id="btn-start-local" class="btn-action">🚀 Empezar Local</button>
       </div>
 
       <!-- Opciones Modo Online -->
@@ -556,7 +558,7 @@
           </select>
         </div>
 
-        <button id="btn-create-room" class="btn-action" style="background: linear-gradient(135deg, #00b09b, #96c93d);"> Crear Sala (Anfitri&oacute;n)</button>
+        <button id="btn-create-room" class="btn-action" style="background: linear-gradient(135deg, #00b09b, #96c93d);">🏠 Crear Sala (Anfitri&oacute;n)</button>
 
         <div class="online-panel" id="host-panel">
           <label style="font-size:0.8rem; color:#a0aec0;">Comparte este c&oacute;digo con tu amigo:</label>
@@ -570,7 +572,7 @@
           <label>Unirse a Sala Existente</label>
           <input type="text" id="input-room-code" placeholder="C&oacute;digo de 5 letras..." style="text-transform: uppercase;">
         </div>
-        <button id="btn-join-room" class="btn-action"> Unirse a Sala</button>
+        <button id="btn-join-room" class="btn-action">🔗 Unirse a Sala</button>
       </div>
 
     </div>
@@ -579,7 +581,7 @@
   <!-- PANTALLA DE RESULTADOS Y TABLA DE POSICIONES -->
   <div id="results-modal" style="display: none;">
     <div class="setup-card" style="text-align: center;">
-      <h2 id="results-title"> TABLA DE POSICIONES</h2>
+      <h2 id="results-title">🏆 TABLA DE POSICIONES</h2>
       <p id="winner-announcement" style="color: #00f2fe; font-size: 1rem; font-weight: 700; margin-top: 4px;"></p>
       
       <table class="leaderboard-table">
@@ -591,13 +593,13 @@
           </tr>
         </thead>
         <tbody id="leaderboard-body">
-          <!-- Filas generadas din�micamente -->
+          <!-- Filas generadas dinámicamente -->
         </tbody>
       </table>
 
       <div style="display: flex; gap: 10px; margin-top: 5px;">
-        <button id="btn-play-again" class="btn-action" style="flex: 1;"> Jugar de nuevo</button>
-        <button id="btn-results-menu" class="btn-menu" style="flex: 1; padding: 12px; font-size: 0.9rem;"> Men&uacute; Principal</button>
+        <button id="btn-play-again" class="btn-action" style="flex: 1;">🔄 Jugar de nuevo</button>
+        <button id="btn-results-menu" class="btn-menu" style="flex: 1; padding: 12px; font-size: 0.9rem;">⚙️ Men&uacute; Principal</button>
       </div>
     </div>
   </div>
@@ -606,22 +608,22 @@
   <header>
     <div class="title-bar">
       <h1>CT4 ONLINE</h1>
-      <button id="btn-open-menu" class="btn-menu"> Men&uacute;</button>
+      <button id="btn-open-menu" class="btn-menu">⚙️ Men&uacute;</button>
     </div>
 
     <!-- PUNTOS Y SCOREBOARD -->
     <div id="scoreboard"></div>
 
     <div id="powerup-bar">
-      <button id="btn-use-eraser" class="btn-powerup"> Usar Borrador</button>
+      <button id="btn-use-eraser" class="btn-powerup">✂️ Usar Borrador</button>
     </div>
   </header>
 
   <!-- CONTENEDOR DE ALERTAS Y ESTADO UBICADO ENTRE LOS PUNTOS Y EL TABLERO -->
   <div id="alerts-wrapper">
-    <!-- POPUP NOTIFICACI�N DE BONUS DIN�MICA -->
+    <!-- POPUP NOTIFICACIÓN DE BONUS DINÁMICA -->
     <div id="bonus-toast">
-      <span id="toast-icon" class="toast-icon"></span>
+      <span id="toast-icon" class="toast-icon">🎁</span>
       <div class="toast-text-group">
         <div id="toast-title" class="toast-title">MISTERIO REVELADO</div>
         <div id="toast-msg" class="toast-msg">&iexcl;Has obtenido un Power-Up!</div>
@@ -631,7 +633,7 @@
     <!-- ESTADO Y TIMER -->
     <div class="status-toast" id="status-toast">
       Turno de: <span id="current-player-text" class="player-label">-</span>
-      <div id="timer-badge" class="timer-badge"> <span id="timer-text">15</span>s</div>
+      <div id="timer-badge" class="timer-badge">⏱️ <span id="timer-text">15</span>s</div>
     </div>
   </div>
 
@@ -644,8 +646,8 @@
     const DEFAULT_COLORS = ["#ff2a5f", "#00d2ff", "#00f5a0", "#ffb703"];
 
     const POWER_TYPES = {
-      X2: { id: 'X2', label: ' X2', color: '#ffcc00' },
-      ERASE: { id: 'ERASE', label: ' Borrador', color: '#ff3366' }
+      X2: { id: 'X2', label: '⚡ X2', color: '#ffcc00' },
+      ERASE: { id: 'ERASE', label: '✂️ Borrador', color: '#ff3366' }
     };
 
     const TURN_TIME_LIMIT = 15;
@@ -721,7 +723,7 @@
     const btnPlayAgain = document.getElementById('btn-play-again');
     const btnResultsMenu = document.getElementById('btn-results-menu');
 
-    // Notificaciones Toast Din�micas
+    // Notificaciones Toast Dinámicas
     const bonusToast = document.getElementById('bonus-toast');
     const toastIcon = document.getElementById('toast-icon');
     const toastTitle = document.getElementById('toast-title');
@@ -769,7 +771,7 @@
     let boxes = [];
     let powerGrid = [];
 
-    // --- POPUP DIN�MICO DE BONUS Y ALERTAS ---
+    // --- POPUP DINÁMICO DE BONUS Y ALERTAS ---
     function triggerBonusToast(icon, title, message, color = "#ffcc00") {
       if (toastTimeout) clearTimeout(toastTimeout);
 
@@ -787,7 +789,7 @@
       }, 2500);
     }
 
-    // --- MODO SELECCI�N INTERFAZ ---
+    // --- MODO SELECCIÓN INTERFAZ ---
     btnModeLocal.addEventListener('click', () => {
       isOnlineMode = false;
       btnModeLocal.classList.add('active');
@@ -879,7 +881,7 @@
         const group = document.createElement('div');
         group.className = 'form-group';
         group.innerHTML = `
-          <label>P${i + 1} Nombre y Color ${isAiPlayer ? '(IA )' : ''}</label>
+          <label>P${i + 1} Nombre y Color ${isAiPlayer ? '(IA 🤖)' : ''}</label>
           <div style="display: flex; gap: 8px;">
             <input type="text" id="input-pname-${i}" value="${defaultName}" ${isAiPlayer ? 'disabled' : ''} maxLength="12">
             <input type="color" id="input-pcolor-${i}" class="color-picker-input" value="${defaultColor}">
@@ -908,7 +910,7 @@
       setupModal.style.display = 'flex';
     });
 
-    // --- OPTIMIZACI�N DE CONEXIONES Y DESCONEXI�N (PeerJS) ---
+    // --- OPTIMIZACIÓN DE CONEXIONES Y DESCONEXIÓN (PeerJS) ---
     function generateRoomCode() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code = '';
@@ -932,7 +934,7 @@
 
     function handleOpponentDisconnect(reason = "El rival se ha desconectado.") {
       stopTimer();
-      triggerBonusToast("", "DESCONECTADO", reason, "#ff3366");
+      triggerBonusToast("⚠️", "DESCONECTADO", reason, "#ff3366");
       currentPlayerText.textContent = "Rival Desconectado";
       currentPlayerText.style.color = "#ff3366";
     }
@@ -957,7 +959,7 @@
 
         setTimeout(() => {
           gridDimensions = parseInt(setupGridOnline.value);
-          const hostName = onlinePlayerName.value.trim() || 'Anfitri�n';
+          const hostName = onlinePlayerName.value.trim() || 'Anfitrión';
           const hostColor = onlinePlayerColor.value;
 
           conn.send({
@@ -978,7 +980,7 @@
       });
 
       peer.on('error', (err) => {
-        triggerBonusToast("", "ERROR P2P", "No se pudo crear la sala online.", "#ff3366");
+        triggerBonusToast("⚠️", "ERROR P2P", "No se pudo crear la sala online.", "#ff3366");
       });
     });
 
@@ -986,7 +988,7 @@
       sound.click();
       const code = inputRoomCode.value.trim().toUpperCase();
       if (code.length < 5) {
-        triggerBonusToast("", "C�DIGO INV�LIDO", "Ingresa un c�digo de 5 letras.", "#ff3366");
+        triggerBonusToast("⚠️", "CÓDIGO INVÁLIDO", "Ingresa un código de 5 letras.", "#ff3366");
         return;
       }
 
@@ -1000,7 +1002,7 @@
       });
 
       peer.on('error', (err) => {
-        triggerBonusToast("", "SIN CONEXI�N", "Verifica el c�digo de la sala.", "#ff3366");
+        triggerBonusToast("❌", "SIN CONEXIÓN", "Verifica el código de la sala.", "#ff3366");
       });
     });
 
@@ -1008,11 +1010,11 @@
       if (!conn) return;
 
       conn.on('close', () => {
-        handleOpponentDisconnect("El rival abandon� la sala.");
+        handleOpponentDisconnect("El rival abandonó la sala.");
       });
 
       conn.on('error', () => {
-        handleOpponentDisconnect("Error de conexi�n con el rival.");
+        handleOpponentDisconnect("Error de conexión con el rival.");
       });
 
       conn.on('data', (data) => {
@@ -1230,8 +1232,8 @@
       }
 
       const activeP = players[currentPlayer];
-      let onlineInfo = isOnlineMode ? (myPlayerIndex === currentPlayer ? ' (T�)' : ' (Rival)') : '';
-      currentPlayerText.textContent = `${activeP.name}${onlineInfo} ${activeP.isAI ? '(Pensando... )' : ''}`;
+      let onlineInfo = isOnlineMode ? (myPlayerIndex === currentPlayer ? ' (Tú)' : ' (Rival)') : '';
+      currentPlayerText.textContent = `${activeP.name}${onlineInfo} ${activeP.isAI ? '(Pensando... 🤖)' : ''}`;
       currentPlayerText.style.color = activeP.hex;
 
       const currentErasers = playerInventories[currentPlayer].erasers;
@@ -1239,10 +1241,10 @@
 
       if (currentErasers > 0 && !activeP.isAI && isMyTurn) {
         btnUseEraser.style.display = 'inline-block';
-        btnUseEraser.textContent = ` Usar Borrador (${currentErasers})`;
+        btnUseEraser.textContent = `✂️ Usar Borrador (${currentErasers})`;
         if (isEraserModeActive) {
           btnUseEraser.classList.add('active-mode');
-          btnUseEraser.textContent = ` Cancelar Borrador`;
+          btnUseEraser.textContent = `❌ Cancelar Borrador`;
         } else {
           btnUseEraser.classList.remove('active-mode');
         }
@@ -1282,7 +1284,7 @@
         }
       }
 
-      // 2. Gu�as
+      // 2. Guías
       ctx.lineWidth = 1;
       ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
       for (let i = 0; i < dotCount; i++) {
@@ -1293,7 +1295,7 @@
         ctx.stroke();
       }
 
-      // 3. L�neas Horizontales
+      // 3. Líneas Horizontales
       for (let r = 0; r < dotCount; r++) {
         for (let c = 0; c < dotCount - 1; c++) {
           const owner = hLines[r][c];
@@ -1306,7 +1308,7 @@
         }
       }
 
-      // 4. L�neas Verticales
+      // 4. Líneas Verticales
       for (let r = 0; r < dotCount - 1; r++) {
         for (let c = 0; c < dotCount; c++) {
           const owner = vLines[r][c];
@@ -1482,7 +1484,7 @@
       isEraserModeActive = false;
       sound.powerup();
 
-      triggerBonusToast("", "L�NEA BORRADA", `${players[currentPlayer].name} elimin� una l�nea enemiga.`, "#ff3366");
+      triggerBonusToast("✂️", "LÍNEA BORRADA", `${players[currentPlayer].name} eliminó una línea enemiga.`, "#ff3366");
 
       updateTurnUI();
       render();
@@ -1522,7 +1524,7 @@
       }
     }
 
-    // --- L�GICA DE LA IA ---
+    // --- LÓGICA DE LA IA ---
     function checkAiTurn() {
       if (players[currentPlayer].isAI && !isAiThinking) {
         isAiThinking = true;
@@ -1654,7 +1656,7 @@
                 pointsAwarded = 2;
                 extraTurnGranted = true;
                 triggerBonusToast(
-                  "", 
+                  "⚡", 
                   "BONUS MULTIPLICADOR", 
                   `${players[currentPlayer].name} obtuvo +2 Puntos y Turno Extra!`, 
                   "#ffcc00"
@@ -1662,7 +1664,7 @@
               } else if (power.id === 'ERASE') {
                 playerInventories[currentPlayer].erasers++;
                 triggerBonusToast(
-                  "", 
+                  "✂️", 
                   "BORRADOR OBTENIDO", 
                   `${players[currentPlayer].name} desbloque&oacute; un Borrador de L&iacute;neas!`, 
                   "#ff3366"
@@ -1706,7 +1708,7 @@
     }
 
     function showLeaderboard() {
-      // Crear copia y ordenar los jugadores seg�n sus puntos en orden descendente
+      // Crear copia y ordenar los jugadores según sus puntos en orden descendente
       const rankedPlayers = players
         .map((player, index) => ({
           name: player.name,
@@ -1792,155 +1794,7 @@
       setupModal.style.display = 'flex';
     });
 
-    // --- EVENTOS DE INTERACCI�N ---
-    canvas.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      handleInput(e.clientX, e.clientY);
-    });
-
-    btnUseEraser.addEventListener('click', () => {
-      if (isOnlineMode && myPlayerIndex !== currentPlayer) return;
-      isEraserModeActive = !isEraserModeActive;
-      updateTurnUI();
-    });
-
-    window.addEventListener('resize', resizeCanvas);
-
-    renderNameInputs();
-  </script>
-</body>
-</html>
-
-                  "BORRADOR OBTENIDO", 
-                  `${players[currentPlayer].name} desbloque&oacute; un Borrador de L&iacute;neas!`, 
-                  "#ff3366"
-                );
-              }
-              powerGrid[row][col] = null;
-            } else {
-              sound.score();
-            }
-
-            scores[currentPlayer] += pointsAwarded;
-          }
-        }
-      };
-
-      if (type === 'H') {
-        claimBox(r - 1, c);
-        claimBox(r, c);
-      } else {
-        claimBox(r, c - 1);
-        claimBox(r, c);
-      }
-
-      return { scored, extraTurnGranted };
-    }
-
-    // --- FIN DE PARTIDA Y MOSTRAR TABLA DE POSICIONES ---
-    function checkGameOver() {
-      const totalBoxes = (dotCount - 1) * (dotCount - 1);
-      const claimedBoxes = boxes.flat().filter(owner => owner !== -1).length;
-
-      if (claimedBoxes >= totalBoxes) {
-        sound.win();
-        stopTimer();
-        setTimeout(() => {
-          showLeaderboard();
-        }, 800);
-        return true;
-      }
-      return false;
-    }
-
-    function showLeaderboard() {
-      // Crear copia y ordenar los jugadores seg�n sus puntos en orden descendente
-      const rankedPlayers = players
-        .map((player, index) => ({
-          name: player.name,
-          score: scores[index],
-          hex: player.hex
-        }))
-        .sort((a, b) => b.score - a.score);
-
-      const maxScore = rankedPlayers[0].score;
-      const winners = rankedPlayers.filter(p => p.score === maxScore);
-
-      if (winners.length === 1) {
-        winnerAnnouncement.innerHTML = `&iexcl;${winners[0].name} gana la partida con ${maxScore} pts!`;
-        winnerAnnouncement.style.color = "#00f5a0";
-      } else {
-        winnerAnnouncement.innerHTML = `&iexcl;Empate entre ${winners.map(w => w.name).join(' y ')} con ${maxScore} pts!`;
-        winnerAnnouncement.style.color = "#00d2ff";
-      }
-
-      // Renderizar filas de la tabla
-      leaderboardBody.innerHTML = '';
-      rankedPlayers.forEach((player, index) => {
-        const row = document.createElement('tr');
-        
-        const posTd = document.createElement('td');
-        posTd.className = 'pos-col';
-        posTd.innerHTML = `${index + 1}<sup>o</sup>`;
-
-        const nameTd = document.createElement('td');
-        
-        const container = document.createElement('div');
-        container.className = 'player-cell-container';
-
-        const nameSpan = document.createElement('span');
-        nameSpan.style.color = player.hex;
-        nameSpan.style.fontWeight = "700";
-        nameSpan.textContent = player.name;
-        container.appendChild(nameSpan);
-
-        if (index === 0) {
-          const badge = document.createElement('span');
-          badge.className = 'badge-winner';
-          badge.innerHTML = '1<sup>o</sup> Lugar';
-          container.appendChild(badge);
-        }
-
-        nameTd.appendChild(container);
-
-        const scoreTd = document.createElement('td');
-        scoreTd.style.fontWeight = "800";
-        scoreTd.textContent = `${player.score} pts`;
-
-        row.appendChild(posTd);
-        row.appendChild(nameTd);
-        row.appendChild(scoreTd);
-
-        leaderboardBody.appendChild(row);
-      });
-
-      resultsModal.style.display = 'flex';
-    }
-
-    function resetAndPlayAgain() {
-      sound.click();
-      resultsModal.style.display = 'none';
-
-      if (isOnlineMode) {
-        if (conn && conn.open) {
-          conn.send({ type: 'RESTART_GAME' });
-        }
-      }
-
-      startCommonGameLogic();
-    }
-
-    // Eventos de los botones de la pantalla de resultados
-    btnPlayAgain.addEventListener('click', resetAndPlayAgain);
-
-    btnResultsMenu.addEventListener('click', () => {
-      sound.click();
-      resultsModal.style.display = 'none';
-      closePeerConnection();
-      setupModal.style.display = 'flex';
-    });
-
-    // --- EVENTOS DE INTERACCI�N ---
+    // --- EVENTOS DE INTERACCIÓN ---
     canvas.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       handleInput(e.clientX, e.clientY);
